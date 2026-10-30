@@ -1,0 +1,366 @@
+/* ============================================================
+   ResQTh · style.css
+   PART 1  DESIGN TOKENS : every colour is a CSS variable (reusable, low coupling). Documented in design-system.md.
+   PART 2  SCREEN STYLES : grouped by requirement (FR-x / NFR-x). Uses var(--...) only, no raw colours.
+   To re-theme the whole app, edit PART 1 only.
+   ============================================================ */
+
+/* ############################################################
+   PART 1 · DESIGN TOKENS
+   ############################################################ */
+:root{
+  /* surfaces + text */
+  --bg:#F4F5FA; --surface:#FFFFFF; --page:#E6E9F2; --ink:#181B38; --muted:#565B78; --line:#D4D8E6;
+  /* brand: Thai-flag navy (calm / low urgency / main actions) */
+  --primary:#27306B; --on-primary:#FFFFFF; --primary-soft:#E1E5F6;
+  --primary-disabled:#5A62A0; --on-primary-disabled:#FFFFFF; /* disabled main button: still clearly navy */
+  /* emergency: red (high urgency / danger). --danger is a FILL; use --danger-text for red text */
+  --danger:#C8102E; --on-danger:#FFFFFF; --danger-deep:#9E0C24; --danger-ink:#4A1520; --danger-soft:#FBE3E7; --danger-text:#B80F2A;
+  /* parser highlights, notes, focus, map */
+  --mk-cat:#F7D3DA; --mk-prov:#C9D2F3;
+  --note-bg:#E9EBF6; --note-ink:#181B38; --note-line:#8A93C4;
+  --focus:#1456D6; --you:#1456D6; --river:#B8C4EA; --map-ink:#181B38; --on-map:#FFFFFF;
+  /* "show to a local" Thai card: always black-on-white in both themes, for legibility */
+  --card-bg:#FFFFFF; --card-ink:#111111; --card-ink-2:#333333; --card-muted:#555555; --card-rule:#CCCCCC;
+  --font:"IBM Plex Sans Thai","Noto Sans Thai","Segoe UI",system-ui,-apple-system,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+  --bg:#0F1226; --surface:#181C38; --page:#080A16; --ink:#E9EBF7; --muted:#A3A9C7; --line:#2C3256;
+  --primary:#AEB8F7; --on-primary:#0E1230; --primary-soft:#1D2350;
+  --primary-disabled:#3B4275; --on-primary-disabled:#E9EBF7;
+  --danger-soft:#3A1720; --danger-text:#FF8FA0;
+  --mk-cat:#6A2A38; --mk-prov:#2C3A82;
+  --note-bg:#232850; --note-ink:#E9EBF7; --note-line:#6A74B8;
+  --focus:#8DB4FF; --you:#5B8CFF; --river:#26306A;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1226; --surface:#181C38; --page:#080A16; --ink:#E9EBF7; --muted:#A3A9C7; --line:#2C3256;
+  --primary:#AEB8F7; --on-primary:#0E1230; --primary-soft:#1D2350;
+  --primary-disabled:#3B4275; --on-primary-disabled:#E9EBF7;
+  --danger-soft:#3A1720; --danger-text:#FF8FA0;
+  --mk-cat:#6A2A38; --mk-prov:#2C3A82;
+  --note-bg:#232850; --note-ink:#E9EBF7; --note-line:#6A74B8;
+  --focus:#8DB4FF; --you:#5B8CFF; --river:#26306A;
+}
+
+/* ############################################################
+   PART 2 · SCREEN STYLES
+   ############################################################ */
+/* ============================================================
+   BASE · reset, typography, focus ring (NFR-6 accessibility: visible keyboard focus)
+   ============================================================ */
+
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0;height:100%}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--page);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+/* ============================================================
+   LAYOUT · app container, phone switcher (mobile), phone frame
+   ============================================================ */
+
+#root{max-width:440px;margin:0 auto;padding:10px 10px 18px}
+.demo{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;margin:0 0 10px}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:transparent;padding:0 12px;min-height:38px;cursor:pointer;font-size:13.5px;position:relative}
+.seg button[aria-pressed="true"]{background:var(--primary);color:var(--on-primary)}
+.seg button.ping::after{content:"";position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--danger)}
+.phone{position:relative;height:min(780px,calc(100dvh - 120px));min-height:520px;border:2px solid var(--line);border-radius:28px;background:var(--bg);overflow:hidden}
+.layer{position:absolute;inset:0}
+.screen{height:100%;overflow:auto;padding:16px 16px 28px}
+.sheet,.full{position:absolute;inset:0;z-index:9;overflow:auto}
+.sheet{background:var(--bg);padding:12px 16px 32px}
+.full{background:var(--card-bg);color:var(--card-ink);display:flex;flex-direction:column;padding:24px 20px 20px}
+@media (max-width:480px){
+  #root{padding:8px 8px 10px}
+  .phone{border-radius:20px}
+}
+
+/* ============================================================
+   SHARED · app header, brand, language button, province chip (FR-1), headings, buttons, chips
+   ============================================================ */
+
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:8px}
+.brand{font-weight:700;font-size:19px;letter-spacing:-.01em}
+.brand span{color:var(--danger-text)}
+.loc{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:5px 11px 5px 8px;cursor:pointer;min-height:34px}
+.loc svg{width:13px;height:13px}
+h1{font-size:28px;line-height:1.15;letter-spacing:-.02em;margin:0 0 6px;font-weight:700}
+h2.sh-h{font-size:24px;line-height:1.2;letter-spacing:-.01em;margin:4px 0 12px}
+.sub{margin:0 0 14px;color:var(--muted)}
+.box{background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:12px}
+.box:focus-within{border-color:var(--focus)}
+
+/* ============================================================
+   FR-4 · free-text incident input box
+   ============================================================ */
+
+textarea{width:100%;border:0;background:transparent;resize:none;min-height:78px;font-size:18px;line-height:1.4;outline:none}
+textarea::placeholder{color:var(--muted);opacity:.8}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:52px;border:0;border-radius:12px;font-weight:600;font-size:16.5px;cursor:pointer;margin-top:10px}
+.btn svg{width:20px;height:20px;flex:none}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line);cursor:pointer}
+.chk:first-child{border-top:0}
+.chk input{flex:none;width:26px;height:26px;margin:1px 0 0;accent-color:var(--primary)}
+.chk input:checked+span{color:var(--muted);text-decoration:line-through}
+.chk small{display:block;font-size:12.5px;color:var(--muted);text-decoration:none}
+#L-sam{display:flex;flex-direction:column}
+#L-sam .screen{height:auto;flex:1 1 auto;min-height:0}
+.btn-primary{background:var(--primary);color:var(--on-primary)}
+.btn-primary:disabled{background:var(--primary-disabled);color:var(--on-primary-disabled);cursor:not-allowed}
+.btn-ghost{background:transparent;border:1.5px solid var(--line)}
+.btn-danger{background:transparent;border:2px solid var(--danger-text);color:var(--danger-text)}
+.btn-sm{min-height:44px;width:auto;padding:0 16px;font-size:15px;margin-top:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+.chip{border:1.5px solid var(--line);background:var(--surface);border-radius:99px;padding:8px 13px;font-size:14.5px;cursor:pointer;min-height:40px}
+.chip[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.link{background:none;border:0;padding:8px 0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:14.5px;min-height:40px}
+.hint{font-size:13.5px;color:var(--muted);margin:10px 2px 0}
+details{margin-top:20px;border-top:1px solid var(--line);padding-top:4px}
+summary{cursor:pointer;padding:10px 0;font-weight:600;font-size:15px}
+details ul{margin:0 0 8px;padding-left:18px;color:var(--muted);font-size:14px}
+details li{margin-bottom:6px}
+
+/* ============================================================
+   FR-4 · "reading your message" loading state
+   ============================================================ */
+
+.reading{padding:48px 0}
+.reading p{margin:0 0 14px;font-size:20px;font-weight:600}
+.bar{height:6px;border-radius:9px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:30%;background:var(--primary);border-radius:9px;animation:slide 1s ease-in-out infinite}
+@keyframes slide{0%{margin-left:-30%}100%{margin-left:100%}}
+.back{background:none;border:0;padding:8px 0;font-size:15px;color:var(--muted);cursor:pointer;min-height:44px}
+
+/* ============================================================
+   FR-4 · parser result: highlighted words, review fields, edit controls, urgency tags (FR-2 / FR-3)
+   ============================================================ */
+
+.said{margin:6px 0 10px;padding:14px 16px;background:var(--surface);border-left:5px solid var(--ink);border-radius:4px 12px 12px 4px;font-size:19px;line-height:1.55}
+mark{border-radius:5px;padding:1px 5px;color:var(--ink)}
+.m-cat{background:var(--mk-cat)} .m-prov{background:var(--mk-prov)}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--muted);margin:0 0 14px}
+.legend b{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-1px;margin-right:6px}
+.fields{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.field{padding:12px 14px;border-bottom:1px solid var(--line)}
+.field:last-child{border-bottom:0}
+.field-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.field-k{font-size:13px;color:var(--muted)}
+.field-v{font-weight:600;font-size:17px}
+.field-src{font-size:13px;color:var(--muted);font-weight:400;margin-left:6px}
+.edit{background:none;border:1.5px solid var(--line);border-radius:9px;padding:0 12px;min-height:40px;cursor:pointer;font-size:14px}
+.tag{display:inline-block;font-size:12.5px;font-weight:600;border-radius:6px;padding:2px 9px;margin-left:8px;vertical-align:2px}
+.tag-high{background:var(--danger-soft);color:var(--danger-text)}
+.tag-low{background:var(--primary-soft);color:var(--primary)}
+.tag-future{background:var(--note-bg);color:var(--note-ink);border:1px dashed var(--note-line);font-size:12px}
+.editor{margin-top:10px}
+select,.txt{width:100%;min-height:48px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);padding:0 12px;font-size:16px}
+
+/* ============================================================
+   FR-4 / NFR-5 · trust note under the review screen
+   ============================================================ */
+
+.trust{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--muted);margin:12px 2px 14px}
+.trust svg{flex:none;width:18px;height:18px;margin-top:2px;color:var(--primary)}
+.ms{font-size:13px;color:var(--muted);margin:0 0 10px}
+
+/* ============================================================
+   FR-3 · HIGH-urgency help screen: red band, call button, Thai/English assistance card
+   ============================================================ */
+
+.band{border-radius:16px;padding:16px;margin-bottom:12px}
+.band-high{background:var(--danger);color:var(--on-danger)}
+.band-low{background:var(--primary);color:var(--on-primary)}
+.band h2{margin:0 0 2px;font-size:23px;line-height:1.2;letter-spacing:-.01em}
+.band p{margin:0;opacity:.92;font-size:15px}
+.call{display:flex;align-items:center;gap:14px;width:100%;margin-top:14px;background:var(--on-danger);color:var(--danger-deep);border:0;border-radius:14px;padding:12px 16px;cursor:pointer;text-align:left;min-height:64px}
+.call svg{flex:none;width:28px;height:28px}
+.call b{display:block;font-size:28px;line-height:1}
+.call small{font-size:13.5px;color:var(--danger-ink)}
+.thai{background:var(--card-bg);color:var(--card-ink);border:4px solid var(--card-ink);border-radius:16px;padding:14px;margin-bottom:12px}
+.thai-k{font-size:13px;color:var(--card-muted);margin:0 0 6px}
+.thai-th{font-size:23px;line-height:1.45;font-weight:700;margin:0 0 8px}
+.thai-en{font-size:14.5px;color:var(--card-ink-2);margin:0;padding-top:8px;border-top:1px solid var(--card-rule)}
+
+/* ============================================================
+   SHARED · cards, hotline number rows, fallback notice (NFR-7 error recovery / FR-3 AC4 national hotlines)
+   ============================================================ */
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.card h3{margin:0 0 6px;font-size:16.5px}
+.card p{margin:0;color:var(--muted);font-size:14.5px}
+.num{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.num:first-of-type{border-top:0}
+.num-n{font-weight:700;font-size:20px}
+.num-d{font-size:13.5px;color:var(--muted)}
+.fallback{background:var(--danger-soft);border-radius:12px;padding:12px 14px;font-size:14px;margin-bottom:12px}
+.sample{font-size:12.5px;color:var(--muted);text-align:center;margin-top:8px}
+
+/* ============================================================
+   FR-2 · category buttons (hotline directory)
+   ============================================================ */
+
+.catbtn{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px;margin-bottom:8px;cursor:pointer;min-height:58px;font-size:16.5px;font-weight:600}
+.catbtn:hover{border-color:var(--primary)}
+
+/* ============================================================
+   FR-3 · LOW-urgency case pack: questions, Thai statement, bring-list, action timeline, status pills
+   ============================================================ */
+
+.q{margin-bottom:14px}
+.q-k{display:block;font-weight:600;font-size:15px;margin:14px 0 8px}
+.q .q-k{margin-top:0}
+.stmt-th{font-size:19px!important;line-height:1.6;font-weight:600;margin:0 0 10px!important;color:var(--ink)!important}
+.stmt-en{font-size:14px!important;padding-top:10px;border-top:1px solid var(--line)}
+.bring{margin:0;padding-left:20px;color:var(--ink);font-size:14.5px}
+.bring li{margin-bottom:8px}
+.tl{list-style:none;margin:0;padding:0}
+.tl li{display:grid;grid-template-columns:96px 1fr;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:14.5px}
+.tl li:first-child{border-top:0}
+.tl-t{font-weight:600;font-size:13px;color:var(--primary)}
+.pill{display:inline-block;font-size:12.5px;font-weight:600;border-radius:99px;padding:1px 9px;margin-right:6px}
+.pill-on{background:var(--primary-soft);color:var(--primary)}
+.pill-off{background:var(--danger-soft);color:var(--danger-text)}
+.under{display:flex;gap:10px;flex-wrap:wrap}
+.opt{display:block;width:100%;text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:8px;cursor:pointer;min-height:58px}
+.opt:hover{border-color:var(--primary)}
+.opt[aria-pressed="true"]{border-color:var(--primary);box-shadow:inset 0 0 0 1px var(--primary)}
+.opt b{display:block;font-size:16px}
+.opt span{font-size:13.5px;color:var(--muted);font-weight:400}
+
+/* ============================================================
+   FR-5 · "sharing live" banner shown while a link is active
+   ============================================================ */
+
+.banner{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:var(--primary);color:var(--on-primary);border:0;border-radius:12px;padding:10px 14px;margin-bottom:12px;cursor:pointer;font-size:14.5px;font-weight:600;min-height:46px}
+
+/* ============================================================
+   FR-1 / FR-5 · simulated map drawing (position dot, route, responder marker)
+   ============================================================ */
+
+.map{display:block;width:100%;height:auto}
+.map-bg{fill:var(--primary-soft)}
+.map-river{fill:none;stroke:var(--river);stroke-width:16;stroke-linecap:round}
+.map-road{fill:none;stroke:var(--surface);stroke-width:12;stroke-linecap:round;stroke-linejoin:round}
+.map-route{fill:none;stroke:var(--danger);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.pulse{fill:var(--you);opacity:.28;transform-box:fill-box;transform-origin:center;animation:pl 1.6s ease-out infinite}
+@keyframes pl{0%{transform:scale(.5);opacity:.5}100%{transform:scale(1.7);opacity:0}}
+.me{fill:var(--you);stroke:var(--on-map);stroke-width:3}
+.lbl{fill:var(--map-ink)}
+.lbl-t{fill:var(--on-map);font-size:12px;font-weight:600;font-family:var(--font)}
+.unit-bg{fill:var(--danger);stroke:var(--on-map);stroke-width:3}
+.unit-x{stroke:var(--on-map);stroke-width:3;stroke-linecap:round;fill:none}
+.pinG{transition:transform .9s linear}
+
+/* ============================================================
+   FR-5 · ETA countdown (user-entered, not dispatch data)
+   ============================================================ */
+
+.eta-big{font-size:36px;font-weight:700;line-height:1.1;letter-spacing:-.02em;margin:2px 0 6px}
+.eta-in{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.eta-in input{width:84px;min-height:48px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);padding:0 10px;font-size:18px}
+.eta-in span{color:var(--muted)}
+
+/* ============================================================
+   FR-5 · "Concept / Future" note (outside the current SRS)
+   ============================================================ */
+
+.concept{background:var(--note-bg);color:var(--note-ink);border:1px dashed var(--note-line);border-radius:12px;padding:12px 14px;font-size:13.5px;margin-bottom:12px}
+.stg{list-style:none;margin:0;padding:0}
+.stg li{display:flex;align-items:center;gap:12px;padding:8px 0;color:var(--muted);font-size:15px}
+.stg i{width:14px;height:14px;border-radius:50%;border:2px solid var(--line);flex:none}
+.stg li.done{color:var(--ink)}
+.stg li.done i{background:var(--primary);border-color:var(--primary)}
+.stg li.cur{color:var(--ink);font-weight:600}
+.stg li.cur i{border-color:var(--danger);background:var(--danger-soft)}
+
+/* ============================================================
+   FR-5 · trusted-contact phone: link bar, live dot, empty state, message bubble
+   ============================================================ */
+
+.urlbar{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:7px 14px;font-size:13.5px;margin-bottom:14px}
+.urlbar svg{width:13px;height:13px;color:var(--primary)}
+.live{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--danger);margin-right:6px;animation:blink 1.4s infinite}
+@keyframes blink{50%{opacity:.3}}
+.empty{text-align:center;color:var(--muted);padding:70px 20px}
+.who{font-size:13px;color:var(--muted);margin:0 0 6px 4px}
+.bubble{display:block;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:18px 18px 18px 4px;padding:12px 14px;max-width:90%;cursor:pointer;font-size:15.5px}
+.bubble u{color:var(--focus)}
+.time{font-size:12px;color:var(--muted);margin:6px 4px}
+
+/* ============================================================
+   FR-3 · full-screen Thai card shown to a local person (always black on white)
+   ============================================================ */
+
+.full-in{flex:1;display:flex;flex-direction:column;justify-content:center}
+.full-th{font-size:28px;line-height:1.55;font-weight:700;margin:0 0 18px}
+.full-en{font-size:15.5px;color:var(--card-ink-2);margin:0;padding-top:14px;border-top:2px solid var(--card-rule)}
+.full .btn-primary{background:var(--card-ink);color:var(--card-bg)}
+.full-sm{font-size:13.5px;color:var(--card-muted);margin:12px 0 0}
+
+/* ============================================================
+   SHARED · toast message
+   ============================================================ */
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;font-size:15px;opacity:0;pointer-events:none;transition:.2s;max-width:calc(100% - 36px);text-align:center;z-index:50}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+
+/* ============================================================
+   LAYOUT · one phone on mobile, two phones side by side on desktop (FR-5 demo)
+   ============================================================ */
+
+.phones{display:grid;grid-template-columns:1fr;gap:18px}
+.pk{font-size:13.5px;font-weight:600;margin:0 0 6px;display:none}
+@media (min-width:861px){#root{max-width:940px}.phones{grid-template-columns:1fr 1fr}.pk{display:block}.seg-view{display:none}}
+@media (max-width:860px){.phones[data-view="sam"] .pw-alex{display:none}.phones[data-view="alex"] .pw-sam{display:none}}
+
+
+/* ============================================================
+   FR-2 / FR-1 · home category grid and location picker note
+   ============================================================ */
+
+/* FR-2 · home category grid (3 columns): one tap opens that category */
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.cbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:10px 4px;cursor:pointer;min-height:78px;text-align:center;font-size:13px;font-weight:600;line-height:1.2;color:var(--ink)}
+.cbtn:hover{border-color:var(--primary)}
+.cbtn .nbic svg{width:26px;height:26px}
+.cbtn.low .nbic{color:var(--primary)}
+/* FR-1 · location picker: "detected" confirmation note (errors reuse .fallback, NFR-7) */
+.ok-note{background:var(--primary-soft);color:var(--ink);border-radius:12px;padding:12px 14px;font-size:14px;margin-top:12px}
+
+/* ============================================================
+   NEARBY FINDER · nearby places grid, list and map pins (no FR in SRS v2: see review notes)
+   ============================================================ */
+
+.nbgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.nbbtn{display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;cursor:pointer;min-height:56px;text-align:left;font-size:14.5px;font-weight:600}
+.nbbtn:hover,.nbbtn[aria-pressed="true"]{border-color:var(--primary)}
+.nbbtn[aria-pressed="true"]{box-shadow:inset 0 0 0 1px var(--primary)}
+.nbic{flex:none;color:var(--danger-text)}
+.nbic svg{width:26px;height:26px;display:block}
+.nbi{border:1px solid var(--line);background:var(--surface);border-radius:14px;margin-bottom:8px;overflow:hidden}
+.nbi.sel{border-color:var(--primary);box-shadow:inset 0 0 0 1px var(--primary)}
+.nbrow{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:12px 14px;cursor:pointer;min-height:56px}
+.nbrow b{display:block;font-size:15.5px}
+.nbn{flex:none;width:28px;height:28px;border-radius:50%;background:var(--danger);color:var(--on-danger);display:grid;place-items:center;font-weight:700;font-size:14px}
+.nbx{padding:0 14px 14px}
+.nbx .under{margin-top:10px}
+.nb-pin{fill:var(--danger);stroke:var(--on-map);stroke-width:3}
+.nb-sel{fill:var(--map-ink);stroke:var(--on-map);stroke-width:3}
+.dirrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.dirrow:first-of-type{border-top:0}
+.topr{display:flex;gap:6px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+
+/* ============================================================
+   NFR-6 · reduced-motion support
+   ============================================================ */
+
+@media (prefers-reduced-motion:reduce){.bar i{animation:none;width:100%}.pulse,.live{animation:none}.pinG{transition:none}*{transition:none!important}}
