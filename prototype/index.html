@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ResQTh · full prototype</title>
+<meta name="description" content="ResQTh clickable prototype: emergency help for visitors in Thailand. FR-1 to FR-6, English and Thai.">
+<meta name="theme-color" content="#C8102E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Font: IBM Plex Sans Thai (falls back to Noto Sans Thai / system fonts) -->
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- CSS: one file. Part 1 = colour tokens (variables), Part 2 = screen styles that only use the tokens -->
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="root">
+  <!-- PHONE SWITCHER (mobile only): shows one phone at a time. Hidden on desktop, where both phones are visible -->
+  <div class="demo">
+    <div class="seg seg-view" role="group" aria-label="Which phone">
+      <button data-act="view" data-v="sam" id="v-sam" aria-pressed="true">Sam's phone</button>
+      <button data-act="view" data-v="alex" id="v-alex" aria-pressed="false">Alex's phone</button>
+    </div>
+  </div>
+  <!-- TWO PHONES: Sam (user in an emergency: FR-1 to FR-5) and Alex (trusted contact: FR-5). Screens are drawn by script.js sections 6-9 -->
+  <div class="phones" id="phones" data-view="sam">
+    <div class="pw pw-sam"><p class="pk">Sam's phone, in an emergency</p><div class="phone"><div class="layer" id="L-sam"><div class="screen" id="scr-sam"></div></div></div></div>
+    <div class="pw pw-alex"><p class="pk" id="pk-alex">Alex's phone, trusted contact</p><div class="phone"><div class="layer" id="L-alex"><div class="screen" id="scr-alex"></div></div></div></div>
+  </div>
+  <!-- SCOPE NOTE for reviewers: which FR each part demonstrates -->
+  <details><summary>What this prototype covers</summary><ul>
+    <li>FR-1: detect your province with GPS (coordinates go to OpenStreetMap Nominatim only when you tap Detect location), or choose it manually.</li>
+    <li>FR-2: pick one of 9 emergency categories on the home screen, or browse hotlines by category. See the urgency tag, clear the filter.</li>
+    <li>FR-3: high-urgency call screen, or low-urgency case pack.</li>
+    <li>FR-4: enter a natural-language emergency query in English or Thai; review the suggested category, province, and urgency; correct the category or province; inspect alternative categories or the “Not sure” emergency-call fallback when unclear.</li>
+    <li>FR-5 (new): live link to a trusted contact, auto-delete.</li>
+    <li>Language: tap the language button at the top to switch between English and Thai.</li>
+    <li>Concept only: "Emergency services see it" needs a partnership and is outside the current SRS.</li>
+    <li>AI-assisted interpretation is simulated with local keyword rules in this prototype; no LLM API is called. All data is sample data. Nothing is saved or sent.</li></ul></details>
+</div>
+<!-- TOAST: short messages (aria-live for screen readers, NFR-6) -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- JAVASCRIPT: one file, sections are labelled inside script.js -->
+<script src="script.js"></script>
+</body>
+</html>
