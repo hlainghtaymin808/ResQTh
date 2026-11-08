@@ -21,3 +21,19 @@ ILY3000
 - M3 System Design — Completed
 - Design System - Completed
 - Architecture - Completed
+
+## Core Features
+- Detect the user's location or allow manual province selection
+- Select and filter emergency situations by category
+- Provide different response tools based on the urgency of the situation
+- Accept natural-language emergency queries with AI assistance
+- Share live location with a trusted contact
+- Find nearby emergency facilities and access directions
+
+## Repository Structure
+- docs/ — Project documents and milestone files
+- README.md — Project overview
+- Architecture
+- Design
+- Prototype
+- .gitignore — Files that should not be tracked by Git
