@@ -1,0 +1,12 @@
+# Traceability matrix (Golden Thread)
+
+Only FR-3 is filled all the way across — that is the single thread this course follows week by week (Ch3 → Ch4/5 → Ch6 → Ch7). The other rows stay open until their week arrives, exactly like your own M2 should.
+
+| Problem / pain | Requirement (FR) | Solution / design | Feature built | Test |
+|---|---|---|---|---|
+| Unfamiliarity with regional hotline numbers | FR-1 detect location | Automatic GPS detection; manual province fallback. | Province-selection screen, browser geolocation and province lookup attempt. | Test GPS success, denied permission, GPS failure, and manual selection: verify results use selected province. |
+| Confusion selecting the right department | FR-2 select category | Category filtering, urgency labels, and clear-filter behavior. | Home screen with nine category options and category-based hotline filtering. | Test each category, matching contacts/urgency labels, and reset to general hotlines. |
+| Panic during high-risk events / lack of post-incidence guidance | FR-3 Display the information | Separate high-urgency action screen and low-urgency checklist: facility and directions cards. | High-urgency assistance interface, low-urgency case pack, facility cards, directions controls. | Test both urgency levels, national-hotline fallback, checklist, and map-failure message. |
+| Foreigner unaware of local terms | FR-4 Natural-language search | Query interpretation and editable category/province/urgency draft. | English/Thai keyword-based parser and result-review screen; implementation is not LLM-based parser in the current prototype. | Test supported English/Thai prompts, ambiguous requests, incorrect suggestions, and manual overrides. |
+| Trusted contacts cannot track location during an emergency | FR-5 Share live location | Recipient and duration selection, sharing link, status, stop, and expiration controls. | Prototype sharing interface and simulated trusted-contact phone. | Test start, recipient view, stop, and expiration in the simulation: mark real live sharing as not implemented unless verified. |
+| Users do not know where nearby emergency facilities are | FR-6 Find nearby facilities | Dedicated nearby screen with facility-type filters, location handling, results, and directions. | Nearby screen with sample place names, calculated distances, and map-style visualization. | Test facility filters, location unavailable, result labels, distance calculation, and directions behavior: verify sample data is clearly identified. |
