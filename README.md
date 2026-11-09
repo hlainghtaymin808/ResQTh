@@ -32,8 +32,9 @@ ILY3000
 
 ## Repository Structure
 - docs/ — Project documents and milestone files
+- docs/ architecture
+- docs/ design
 - README.md — Project overview
-- Architecture
-- Design
 - Prototype
+- slides/ - for final report
 - .gitignore — Files that should not be tracked by Git

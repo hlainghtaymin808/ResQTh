@@ -1,6 +1,12 @@
 # ResQTh — M1 Project Charter
 
-Team name & members (id, name): ILY3000 - ( 6931503013, Moe Pyae Pyae Aung) (6931503048, Nantarat Wonglakorn) (6931503003, Hlaing Htay Min )( 6931503122, James Aloysius)( 6931503123, Khag Ga)
+Team name & members (id, name): ILY3000 
+ ( 6931503013, Moe Pyae Pyae Aung) 
+ (6931503048, Nantarat Wonglakorn) 
+ (6931503003, Hlaing Htay Min )
+ ( 6931503122, James Aloysius)
+ ( 6931503123, Khag Ga)
+ 
 ## The Problem
 
 Foreign residents in Thailand face severe communication barriers, unfamiliarity with local infrastructure, and high stress during emergency situations. Existing emergency resources are scattered, language-restricted, or difficult to navigate quickly, leading to delayed action which could worsen their existing situation whether it is a minor or major case or miscommunication with first responders. ResQTh is an AI-assisted emergency information and post-incident action guide for foreign residents and visitors in Thailand. It provides verified, location-specific emergency contacts, urgency-based action tools, natural-language emergency search, nearby facility routing, and user-controlled live location sharing with a trusted contact.
